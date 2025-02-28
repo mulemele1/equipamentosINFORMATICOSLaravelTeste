@@ -42,7 +42,7 @@
                             <a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="img"><span>
                                     USUÁRIOS</span> <span class="menu-arrow"></span></a>
                             <ul>
-                                <li><a href="#">Novo Usuário</a></li>
+                                <li><a href="{{url('login')}}">Novo Usuário</a></li>
                                 <li><a href="#">Lista de Usuários</a></li>
                             </ul>
                         </li>

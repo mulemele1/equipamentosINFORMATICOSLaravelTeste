@@ -30,7 +30,17 @@
                     </div>
                 </div>
 
-                <form action="{{url('add_maquina')}}" method="Post" enctype="multipart/form-data">
+                @if ($errors)
+
+                @foreach ($errors->all() as $errors)
+                
+                <li>
+                    {{$errors}}
+                </li>
+                @endforeach
+                
+                @endif
+                <form action="{{ url('add_maquina') }}" method="POST" enctype="multipart/form-data">
 
                     @csrf
 
@@ -41,16 +51,16 @@
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label>Número da máquina</label>
-                                        <input type="text" name="numero">
+                                        <input type="text" name="numero_da_maquina" id="numero_da_maquina">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
-                                        <label for="marca">Marca</label>
-                                        <select class="form-control" id="marca" name="marca" onchange="updateInputValue(this)">
+                                        <label for="marca_id">Marca</label>
+                                        <select class="form-control" id="marca_id" name="marca_id" onchange="updateInputValue(this)">
                                             <option value="" class="placeholder-option">Selecione a Marca</option>
-                                            @if (isset($marca))
-                                                <option value="{{ $marca->id }}" selected>{{ $marca->nome_marca }}</option>
+                                            @if (isset($marca_id))
+                                                <option value="{{ $marca_id->id }}" selected>{{ $marca_id->nome_marca }}</option>
                                             @endif
                                             @foreach ($marcas as $mar)
                                                 <option value="{{ $mar->id }}">{{ $mar->nome_marca }}</option>
@@ -61,40 +71,40 @@
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label>Modelo</label>
-                                        <input type="text" name="modelo">
+                                        <input type="text" name="modelo" id="modelo">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label>Serial Number</label>
-                                        <input type="text" name="serial">
+                                        <input type="text" name="serial_number" id="serial_number">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label>Carregador</label>
-                                        <input type="text" name="carregador">
+                                        <input type="text" name="carregador" id="carregador">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label>Disco</label>
-                                        <input type="text" name="disco">
+                                        <input type="text" name="disco" id="disco">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label>Memória</label>
-                                        <input type="text" name="memoria">
+                                        <input type="text" name="memoria" id="memoria">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
-                                        <label for="sistema">Sistema Operacional</label>
-                                        <select class="form-control" type="text" id="sistema" name="sistema" onchange="updateInputValue(this)">
+                                        <label for="sis_operacional_id">Sistema Operacional</label>
+                                        <select class="form-control" type="text" id="sis_operacional_id" name="sis_operacional_id" onchange="updateInputValue(this)">
                                             <option value="" class="placeholder-option">Selecione o sistema</option>
-                                            @if (isset($sistema))
-                                                <option value="{{ $sistema->id }}" selected>{{ $sistema->nome_sistema }}</option>
+                                            @if (isset($sis_operacional_id))
+                                                <option value="{{ $sis_operacional_id->id }}" selected>{{ $sis_operacional_id->nome_sistema }}</option>
                                             @endif
                                             @foreach ($sistemas as $sist)
                                                 <option value="{{ $sist->id }}">{{ $sist->nome_sistema }}</option>
@@ -105,16 +115,16 @@
                                 <div class="col-lg-9">
                                     <div class="form-group">
                                         <label>Processador</label>
-                                        <input type="text" name="processador">
+                                        <input type="text" name="processador" id="processador">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
-                                        <label for="local">Local</label>
-                                        <select class="form-control" type="text" id="local" name="local" onchange="updateInputValue(this)">
+                                        <label for="local_id">Local</label>
+                                        <select class="form-control" type="text" id="local_id" name="local_id" onchange="updateInputValue(this)">
                                             <option value="" class="placeholder-option">Selecione o Local</option>
-                                            @if (isset($local))
-                                                <option value="{{ $local->id }}" selected>{{ $local->nome_local }}</option>
+                                            @if (isset($local_id))
+                                                <option value="{{ $local_id->id }}" selected>{{ $local_id->nome_local }}</option>
                                             @endif
                                             @foreach ($locals as $loc)
                                                 <option value="{{ $loc->id }}">{{ $loc->nome_local }}</option>
@@ -124,11 +134,11 @@
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
-                                        <label for="estado">Estado</label>
-                                        <select class="form-control" type="text" id="estado" name="estado" onchange="updateInputValue(this)">
+                                        <label for="estado_id">Estado</label>
+                                        <select class="form-control" type="text" id="estado_id" name="estado_id" onchange="updateInputValue(this)">
                                             <option value="" class="placeholder-option">Selecione o Estado</option>
-                                            @if (isset($estado))
-                                                <option value="{{ $estado->id }}" selected>{{ $estado->nome_estado }}</option>
+                                            @if (isset($estado_id))
+                                                <option value="{{ $estado_id->id }}" selected>{{ $estado_id->nome_estado }}</option>
                                             @endif
                                             @foreach ($estados as $estad)
                                                 <option value="{{ $estad->id }}">{{ $estad->nome_estado }}</option>
@@ -139,19 +149,19 @@
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label>Projecto</label>
-                                        <input type="text" name="projecto">
+                                        <input type="text" name="projeto" id="projeto">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label> Atribuido á</label>
-                                        <input type="text" name="atribuido">
+                                        <input type="text" name="atribuido_a" id="atribuido_a">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-sm-6 col-12">
                                     <div class="form-group">
                                         <label> Ano de aquisição</label>
-                                        <input type="text" name="ano">
+                                        <input type="date" name="ano_de_aquisicao" id="ano_de_aquisicao">
                                     </div>
                                 </div>
                                 <div class="col-lg-8">
@@ -188,10 +198,7 @@
     <script src="assets/plugins/apexchart/apexcharts.min.js"></script>
     <script src="assets/plugins/apexchart/chart-data.js"></script>
 
-    <script src="assets/js/script.js"></script>
-
-
-    <script>
+    <script src="assets/js/script.js">
         document.getElementById('myForm').addEventListener('submit', async (event) => {
             event.preventDefault(); // Prevent default form submission
 
@@ -215,6 +222,25 @@
                     window.location.href = "{{url('view_maquina')}}";
                 }, 1000); // Add a small delay to allow time for submission
             }
+        });
+
+
+        $(function(){
+            // Initialize DataTable
+            var dtToday = new Date();
+
+            var month = dtToday.getMonth() + 1;
+            var day = dtToday.getDate();
+            var year = dtToday.getFullYear();
+
+            if(month < 10)
+                month = '0' + month.toString();
+
+            if(day < 10)
+                day = '0' + day.toString();
+                
+            var maxDate = year + '-' + month + '-' + day;
+            $('#ano_de_aquisicao').attr('min', maxDate);
         });
     </script>
 

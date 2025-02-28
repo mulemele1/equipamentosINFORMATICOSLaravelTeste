@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Equipamentos Delegacao Cispoc</title>
 
-<link rel="shortcut icon" type="image/x-icon" href="assets/img/logo.png">
+<link rel="shortcut icon" type="image/x-icon" href="assets/img/logoicon.png">
 
 <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 

@@ -1,15 +1,30 @@
 <?php
 
-use App\Http\Controllers\TamplateController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TamplateController;
 use App\Http\Controllers\MarcaController;
-use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\LocalController;
+use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\SistemaController;
 
-//Route::get('/', function () {
-//    return view('welcome');
-//});
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
 
 route::get('/', [TamplateController::class,'index']);
 
@@ -18,13 +33,13 @@ route::get('/logout', [TamplateController::class,'logout']);
 route::get('/home', [TamplateController::class,'home']);
 
 
-route::get('/create_maquina', [TamplateController::class,'create_maquina']);
-route::post('/add_maquina', [TamplateController::class,'add_maquina']);
-route::get('/view_maquina', [TamplateController::class,'view_maquina']);
-route::get('/delete_maquina/{id}', [TamplateController::class,'delete_maquina']);
-route::get('/update_maquina/{id}', [TamplateController::class,'update_maquina']);
-route::post('/edit_maquina/{id}', [TamplateController::class,'edit_maquina']);
-route::get('/details_maquina/{id}', [TamplateController::class,'details_maquina']);
+route::get('/create_maquina', [TamplateController::class,'create_maquina'])->name('create_maquina');
+route::post('/add_maquina', [TamplateController::class,'add_maquina'])->name('add_maquina');
+route::get('/view_maquina', [TamplateController::class,'view_maquina'])->name('view_maquina');
+route::get('/delete_maquina/{id}', [TamplateController::class,'delete_maquina'])->name('delete_maquina');
+route::get('/update_maquina/{id}', [TamplateController::class,'update_maquina'])->name('update_maquina');
+route::post('/edit_maquina/{id}', [TamplateController::class,'edit_maquina'])->name('edit_maquina');
+route::get('/details_maquina/{id}', [TamplateController::class,'details_maquina'])->name('details_maquina');
 
 route::get('/create_marca', [MarcaController::class,'create_marca']);
 route::post('/add_marca', [MarcaController::class,'add_marca']);

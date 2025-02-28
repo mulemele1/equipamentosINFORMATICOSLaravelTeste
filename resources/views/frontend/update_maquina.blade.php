@@ -148,9 +148,9 @@
                                 </div>
                                 <div class="col-lg-12">
                                 <div class="form-group">
-    <label> Ano de aquisição</label>
-    <input type="text" name="ano" value="{{ \Carbon\Carbon::parse($data->ano_de_aquisicao)->format('m:d:y') }}">
-</div>
+                                        <label> Ano de aquisição</label>
+                                        <input type="date" name="ano_de_aquisicao" id="ano_de_aquisicao">
+                                    </div>
 
                                 </div>
                                 <div class="col-lg-12">
@@ -187,30 +187,52 @@
     <script src="assets/plugins/apexchart/apexcharts.min.js"></script>
     <script src="assets/plugins/apexchart/chart-data.js"></script>
 
-    <script src="assets/js/script.js"></script>
-
-
-    <script>
+    <script src="assets/js/script.js">
         document.getElementById('myForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
+            event.preventDefault(); // Prevent default form submission
 
-            const result = await Swal.fire({
-                title: 'Confirmar Atualização',
-                text: "Deseja realmente atualizar os dados?",
+            const Swal = await Swal.fire({
+                title: 'Confirmar Salvo',
+                text: "Deseja realmente salvar os dados?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Sim, Atualizar!',
-                cancelButtonText: 'Não, Cancelar',
+                confirmButtonText: 'Sim, Salvar!',
+                cancelButtonText: 'Não, Cancelar'
             });
 
-            if (result.isConfirmed) {
+            if (Swal.isConfirmed) {
+                // Form was confirmed, proceed with submission
                 document.getElementById('myForm').submit();
+
+                // After submission, redirect to view_maquina page
+                setTimeout(() => {
+                    window.location.href = "{{url('view_maquina')}}";
+                }, 1000); // Add a small delay to allow time for submission
             }
         });
 
+
+        $(function(){
+            // Initialize DataTable
+            var dtToday = new Date();
+
+            var month = dtToday.getMonth() + 1;
+            var day = dtToday.getDate();
+            var year = dtToday.getFullYear();
+
+            if(month < 10)
+                month = '0' + month.toString();
+
+            if(day < 10)
+                day = '0' + day.toString();
+                
+            var maxDate = year + '-' + month + '-' + day;
+            $('#ano_de_aquisicao').attr('min', maxDate);
+        });
     </script>
+
 
 </body>
 

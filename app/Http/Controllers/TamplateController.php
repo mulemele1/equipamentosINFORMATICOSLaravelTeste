@@ -6,35 +6,32 @@ use App\Models\Estado;
 use App\Models\Local;
 use App\Models\Marca;
 use App\Models\Sistema;
-use Illuminate\Http\Request;
 use App\Models\Maquina;
+use Illuminate\Http\Request;
 
 class TamplateController extends Controller
 {
-    //
+    // Página inicial
     public function index()
     {
         return view('frontend.home');
     }
 
-
+    // Logout
     public function logout()
     {
         return view('frontend.logout');
     }
 
+    // Home
     public function home()
     {
         return view('frontend.home');
     }
 
-
-    
-
-    // MAQUINA OU EQUIPAMENTO
+    // Criar máquina
     public function create_maquina()
     {
-
         $marcas = Marca::all(['id', 'nome_marca']);
         $locals = Local::all(['id', 'nome_local']);
         $estados = Estado::all(['id', 'nome_estado']);
@@ -43,31 +40,35 @@ class TamplateController extends Controller
         return view('frontend.create_maquina', compact('marcas', 'locals', 'estados', 'sistemas'));
     }
 
+    // Adicionar máquina
     public function add_maquina(Request $request)
-    {
-        $data = new Maquina;
+{
+    // Validação dos dados do formulário
+    $validatedData = $request->validate([
+        'numero_da_maquina' => 'required|string|max:255',
+        'marca_id' => 'required|exists:marcas,id',
+        'modelo' => 'required|string|max:255',
+        'serial_number' => 'required|string|max:255',
+        'carregador' => 'required|string|max:255',
+        'disco' => 'required|string|max:255',
+        'memoria' => 'required|string|max:255',
+        'sis_operacional_id' => 'required|exists:sistemas,id',
+        'processador' => 'required|string|max:255',
+        'local_id' => 'required|exists:locals,id',
+        'estado_id' => 'required|exists:estados,id',
+        'projeto' => 'nullable|string|max:255',
+        'atribuido_a' => 'nullable|string|max:255',
+        'ano_de_aquisicao' => 'nullable|date',
+    ]);
 
-        $data->numero_da_maquina = $request->numero;
-        $data->marca_id = $request->marca; // Atualizado para marca_id
-        $data->modelo = $request->modelo;
-        $data->serial_number = $request->serial;
-        $data->carregador = $request->carregador;
-        $data->disco = $request->disco;
-        $data->memoria = $request->memoria;
-        $data->sis_operacional_id = $request->sistema; // Atualizado para sis_operacional_id
-        $data->processador = $request->processador;
-        $data->local_id = $request->local; // Atualizado para local_id
-        $data->estado_id = $request->estado; // Atualizado para estado_id
-        $data->projeto = $request->projecto;
-        $data->atribuido_a = $request->atribuido;
-        $data->ano_de_aquisicao = $request->ano;
+    // Cria uma nova máquina com os dados validados
+    Maquina::create($validatedData);
 
-        $data->save();
+    // Redireciona para a página de visualização de máquinas com uma mensagem de sucesso
+    return redirect()->route('view_maquina')->with('success', 'Máquina adicionada com sucesso!');
+}
 
-        //return redirect()->route('frontend.view_maquina');
-        return redirect()->back();
-    }
-
+    // Visualizar máquinas
     public function view_maquina()
     {
         $data = Maquina::with(['marca', 'local', 'estado', 'sis_operacional'])->get();
@@ -75,112 +76,77 @@ class TamplateController extends Controller
         return view('frontend.view_maquina', compact('data'));
     }
 
+    // Deletar máquina
     public function delete_maquina($id)
     {
-        // Tenta localizar o equipamento pelo ID
         $data = Maquina::find($id);
 
-        // Verifica se o equipamento existe
         if (!$data) {
-            // Redireciona de volta com mensagem de erro
             return redirect()->back()->with('error', 'Equipamento não encontrado.');
         }
 
-        // Realiza a exclusão do equipamento
         $data->delete();
 
-        // Redireciona de volta com mensagem de sucesso
         return redirect()->back()->with('success', 'Equipamento deletado com sucesso.');
     }
 
-
+    // Atualizar máquina - formulário
     public function update_maquina($id)
     {
-        $data = Maquina::find($id); // Carregue o registro pelo ID
+        $data = Maquina::find($id);
 
         if (!$data) {
-            // Redirecione com uma mensagem de erro se o registro não for encontrado
             return redirect()->back()->with('error', 'Equipamento não encontrado.');
         }
 
-        // Carregar as informações adicionais
         $marcas = Marca::all(['id', 'nome_marca']);
         $locals = Local::all(['id', 'nome_local']);
         $estados = Estado::all(['id', 'nome_estado']);
         $sistemas = Sistema::all(['id', 'nome_sistema']);
 
-        // Retornar a view com todas as variáveis necessárias
         return view('frontend.update_maquina', compact('data', 'marcas', 'locals', 'estados', 'sistemas'));
     }
 
-
+    // Editar máquina
     public function edit_maquina(Request $request, $id)
     {
-        // Tenta localizar o equipamento pelo ID
-        if (!$data = Maquina::find($id)) {
-            return redirect()->route('frontend.view_maquina')->with('error', 'Equipamento não encontrado');
+        $data = Maquina::find($id);
+
+        if (!$data) {
+            return redirect()->route('frontend.view_maquina')->with('error', 'Equipamento não encontrado.');
         }
 
+        $validatedData = $request->validate([
+            'numero_da_maquina' => 'required|string|max:255',
+            'marca_id' => 'required|exists:marcas,id',
+            'modelo' => 'required|string|max:255',
+            'serial' => 'required|string|max:255',
+            'carregador' => 'required',
+            'disco' => 'required|string|max:255',
+            'memoria' => 'required|string|max:255',
+            'sis_operacional_id' => 'required|exists:sistemas,id',
+            'processador' => 'required|string|max:255',
+            'local_id' => 'required|exists:locals,id',
+            'estado_id' => 'required|exists:estados,id',
+            'projecto' => 'nullable|string|max:255',
+            'atribuido' => 'nullable|string|max:255',
+            'ano_de_aquisicao' => 'nullable',
+        ]);
 
-        // Atualiza os dados da máquina com os valores do formulário
-        $data->numero_da_maquina = $request->numero;
-        $data->marca_id = $request->marca_id; // Corrigido para 'marca_id'
-        $data->modelo = $request->modelo;
-        $data->serial_number = $request->serial;
-        $data->carregador = $request->carregador;
-        $data->disco = $request->disco;
-        $data->memoria = $request->memoria;
-        $data->sis_operacional_id = $request->sis_operacional_id; // Corrigido para 'sis_operacional_id'
-        $data->processador = $request->processador;
-        $data->local_id = $request->local_id; // Corrigido para 'local_id'
-        $data->estado_id = $request->estado_id; // Corrigido para 'estado_id'
-        $data->projeto = $request->projecto;
-        $data->atribuido_a = $request->atribuido;
-        $data->ano_de_aquisicao = $request->ano;
+        $data->update($validatedData);
 
-
-        $data->update($request->all());
-
-        // Carregar as informações adicionais
-        $marcas = Marca::all(['id', 'nome_marca']);
-        $locals = Local::all(['id', 'nome_local']);
-        $estados = Estado::all(['id', 'nome_estado']);
-        $sistemas = Sistema::all(['id', 'nome_sistema']);
-
-        // Retornar a view com todas as variáveis necessárias
-        return view('frontend.update_maquina', compact('data', 'marcas', 'locals', 'estados', 'sistemas'));
+        return redirect()->route('frontend.view_maquina')->with('success', 'Máquina atualizada com sucesso!');
     }
 
-
-
+    // Detalhes da máquina
     public function details_maquina($id)
     {
         $data = Maquina::with(['marca', 'local', 'estado', 'sis_operacional'])->find($id);
 
+        if (!$data) {
+            return redirect()->back()->with('error', 'Equipamento não encontrado.');
+        }
+
         return view('frontend.details_maquina', compact('data'));
-    }
-
-
-    public function details2_maquina(Request $request, $id)
-    {
-        $data = Maquina::find($id);
-
-        $data->numero_da_maquina = $request->title;
-        $data->marca = $request->marca;
-        $data->modelo = $request->modelo;
-        $data->serial_number = $request->serial;
-        $data->carregador = $request->carregador;
-        $data->disco = $request->disco;
-        $data->memoria = $request->memoria;
-        $data->sistema_operacional = $request->sistema;
-        $data->processador = $request->processador;
-        $data->local = $request->local;
-        $data->estado = $request->estado;
-        $data->projeto = $request->projecto;
-        $data->atribuido_a = $request->atribuido;
-        $data->ano_de_aquisicao = $request->ano;
-
-
-        return redirect()->back();
     }
 }

@@ -22,7 +22,7 @@ class Maquina extends Model
      * @var array
      */
     protected $fillable = [
-        'numero_da_maquina',   // Número da máquina
+        'numero_da_maquina',   // Número da máquina 
         'marca_id',               // Marca
         'modelo',              // Modelo
         'serial_number',       // Serial Number
